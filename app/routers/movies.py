@@ -140,3 +140,25 @@ def update_movie(
 
     # Devuelve la película actualizada
     return movie
+
+@router.delete("/{movie_id}", status_code=204)
+def delete_movie(movie_id: int, db: Session = Depends(get_db)):
+    # Busca la película por su ID
+    movie = db.get(Movie, movie_id)
+
+    # Si no existe, devuelve un error 404
+    if movie is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Movie not found"
+        )
+
+    # Elimina las relaciones entre la película y sus géneros
+    # de la tabla intermedia movie_genres
+    movie.genres = []
+
+    # Elimina la película de la base de datos
+    db.delete(movie)
+
+    # Confirma los cambios en SQLite
+    db.commit()
