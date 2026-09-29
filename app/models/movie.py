@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -10,3 +11,9 @@ class Movie(Base):
     title = Column(String, nullable=False)
     director = Column(String, nullable=False)
     release_year = Column(Integer, nullable=False)
+
+    genres = relationship(
+        "Genre",
+        secondary="movie_genres",
+        back_populates="movies"
+    )

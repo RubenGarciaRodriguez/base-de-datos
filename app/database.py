@@ -15,3 +15,13 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+# Esto evita que dejemos conexiones abiertas
+
+def get_db():
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
